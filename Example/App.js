@@ -1,16 +1,15 @@
-import React from 'react-native';
-
-const {
+import React from 'react';
+import {
+  AppRegistry,
   StyleSheet,
   Text,
   View,
   PixelRatio,
   TouchableOpacity,
   Image,
-  NativeModules: {
-    ImagePickerManager
-  }
-} = React;
+} from 'react-native';
+
+import ImagePicker from 'react-native-image-picker';
 
 export default class App extends React.Component {
 
@@ -21,34 +20,31 @@ export default class App extends React.Component {
 
   selectPhotoTapped() {
     const options = {
-      title: 'Photo Picker',
-      takePhotoButtonTitle: 'Take Photo...',
-      chooseFromLibraryButtonTitle: 'Choose from Library...',
-      quality: 0.5,
-      maxWidth: 300,
-      maxHeight: 300,
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
       storageOptions: {
         skipBackup: true
-      },
-      allowsEditing: true
+      }
     };
 
-    ImagePickerManager.showImagePicker(options, (response) => {
+    ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled photo picker');
       }
       else if (response.error) {
-        console.log('ImagePickerManager Error: ', response.error);
+        console.log('ImagePicker Error: ', response.error);
       }
       else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       }
       else {
-        // You can display the image using either:
-        //const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-        const source = {uri: response.uri.replace('file://', ''), isStatic: true};
+        let source = { uri: response.uri };
+
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
         this.setState({
           avatarSource: source
@@ -65,14 +61,14 @@ export default class App extends React.Component {
       videoQuality: 'medium'
     };
 
-    ImagePickerManager.showImagePicker(options, (response) => {
+    ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
         console.log('User cancelled video picker');
       }
       else if (response.error) {
-        console.log('ImagePickerManager Error: ', response.error);
+        console.log('ImagePicker Error: ', response.error);
       }
       else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
@@ -130,5 +126,3 @@ const styles = StyleSheet.create({
     height: 150
   }
 });
-
-React.AppRegistry.registerComponent('Example', () => Example);
